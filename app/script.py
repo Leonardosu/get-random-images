@@ -23,7 +23,8 @@ def index():
         imgur_link = img_link[:len(img_link) - 4]
 
         found_image = validateImage(imgur_link)
-        print(found_image)
+        print("Found image." if found_image else "Image is crashed.")
+
     return render_template('index.html', random_img=img_link)
 
 
