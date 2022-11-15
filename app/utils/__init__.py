@@ -1,2 +1,1 @@
-from .getRandomLink import getRandomLink
-from .validateImage import validateImage
+from .validator import Validator
