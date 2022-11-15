@@ -1,31 +1,31 @@
+import time
+import random
 from flask import Flask, render_template
-from urllib.request import Request, urlopen
+from utils import Validator
 
-app = Flask(__name__)
-from utils import getRandomLink, validateImage
+app = Flask(__name__, template_folder='templates')
 
-@app.route('/')
+
+def get_random_site():
+    num = random.randrange(100000, 999999)
+    site = "https://prnt.sc/" + str(num)
+    return site
+
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
 
     found_image = False
+    img_link = ''
     while not found_image:
-
-        site = getRandomLink()
-        req = Request(site, headers={'User-Agent': 'Mozilla/5.0'})
-        html = str(urlopen(req).read())
-
-        img_class = "twitter:image:src"
-        img_class_index = html.index(img_class)
-        img_link_ini = img_class_index + len(img_class) + 11
-        img_link_end = img_link_ini + html[img_link_ini:].index('"')
-        img_link = html[img_link_ini:img_link_end]
-
-        imgur_link = img_link[:len(img_link) - 4]
-
-        found_image = validateImage(imgur_link)
+        site = get_random_site()
+        found_image, img_link = Validator.validate_link(site)
+        
         print("Found image." if found_image else "Image is crashed.")
+        time.sleep(0.2)
 
-    return render_template('index.html', random_img=img_link)
+    print(img_link)
+    return render_template('index.html', img_url=img_link)
 
 
 if __name__ == "__main__":

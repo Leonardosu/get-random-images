@@ -1,12 +1,10 @@
-{% extends 'base.html' %}
+<html lang="en">
+    <div class="container">
+        <button type="button" style="margin-right:30px;" onClick="window.location.reload();">Next image </button>
+        <button type="button">Other button!</button>
+    </div>
 
-{% block head %}
-{% endblock %}
-
-{% block body %}
-<div class="container">
-<button type="button" style="margin-right:30px;" onClick="window.location.reload();">Next image </button>
-<button type="button">Other button!</button>
-</div>
-<img src="{{ random_img }}" alt="Random Image">
-{% endblock %}
+    <body>
+        <img src="{{ random_img }}" alt="img" height="400" width="400">
+    </body>
+</html>
