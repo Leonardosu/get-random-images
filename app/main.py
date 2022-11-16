@@ -1,32 +1,31 @@
 import time
-import random
 from flask import Flask, render_template
-from utils import Validator
+from utils import Validator, WebHelper
 
 app = Flask(__name__, template_folder='templates')
 
 
-def get_random_site():
-    num = random.randrange(100000, 999999)
-    site = "https://prnt.sc/" + str(num)
-    return site
-
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
-
     found_image = False
-    img_link = ''
+    image_link = ''
+
     while not found_image:
-        site = get_random_site()
-        found_image, img_link = Validator.validate_link(site)
-        
-        print("Found image." if found_image else "Image is crashed.")
-        time.sleep(0.2)
+        site = WebHelper.get_random_site()
+        found_image, image_link = Validator.validate_link(site)
 
-    print(img_link)
-    return render_template('index.html', img_url=img_link)
+        if found_image:
+            try:
+                WebHelper.download_image(image_link, 'static/', 'temporary_image.jpg')
+            except Exception as e:
+                found_image = False
+                print(f'Failed to download image: {image_link}\n{e}')
+
+        time.sleep(0.01)
+
+    print(image_link)
+    return render_template('index.html', random_img=image_link)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run()
